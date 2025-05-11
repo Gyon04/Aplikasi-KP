@@ -2,7 +2,7 @@
 
 return [
     'letter' => [
-        'agenda_number' => 'Nomor Surat',
+        'agenda_number' => 'Nomor Hak',
         'from' => 'Peminjam',
         'to' => 'Peminjam',
         'reference_number' => 'Jenis Hak',

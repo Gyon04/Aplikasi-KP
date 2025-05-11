@@ -13,6 +13,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 
 class OutgoingLetterController extends Controller
 {
@@ -24,10 +25,35 @@ class OutgoingLetterController extends Controller
      */
     public function index(Request $request): View
     {
-        return view('pages.transaction.outgoing.index', [
-            'data' => Letter::outgoing()->render($request->search),
-            'search' => $request->search,
-        ]);
+        $user = Auth::user();
+
+        if ($user->isAdmin()) {
+            // Admin lihat semua
+            $daftarSurat = Letter::all();
+        } else {
+            // User hanya lihat surat yang dipinjam sendiri
+            $daftarSurat = Letter::all()
+                ->where('user_id', $user->id);
+        }
+
+        // Kirim data surat ke view
+        return view('pages.transaction.outgoing.index', compact('daftarSurat'));
+    }
+    public function kembalikanSurat(Request $request)
+    {
+        try {
+            // Ambil ID surat yang dipilih untuk dikembalikan
+            $suratIds = $request->input('surat');
+
+            // Update status surat menjadi "dikembalikan"
+            Letter::whereIn('kode', $suratIds)->update(['status' => 'dikembalikan']);
+
+            return redirect()
+                ->route('transaction.outgoing.surat_dipinjam')
+                ->with('success', 'Surat berhasil dikembalikan!');
+        } catch (\Throwable $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
     /**

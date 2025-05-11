@@ -19,7 +19,7 @@ return [
         'end_date' => 'Sampai Tanggal',
     ],
     'agenda' => [
-        'menu' => 'Laporan Surat',
+        'menu' => 'Laporan',
         'incoming_letter' => 'Surat Dipinjam',
         'outgoing_letter' => 'Surat Dikembalikan',
         'disposition_letter' => 'Surat Disposisi',

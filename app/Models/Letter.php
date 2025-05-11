@@ -112,14 +112,16 @@ class Letter extends Model
             ]);
     }
 
-    public function scopeAgenda($query, $since, $until, $filter)
+    public function scopeAgenda($query, $since, $until, $filter, $jenisHak = null)
     {
         return $query
             ->when($since && $until && $filter, function ($query, $condition) use ($since, $until, $filter) {
                 return $query->whereBetween(DB::raw('DATE(' . $filter . ')'), [$since, $until]);
+            })
+            ->when($jenisHak, function ($query, $jenisHak) {
+                return $query->where('classification_code', $jenisHak);
             });
     }
-
     /**
      * @return BelongsTo
      */

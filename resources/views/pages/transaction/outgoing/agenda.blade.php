@@ -53,7 +53,7 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th>{{ __('model.letter.reference_number') }}</th>
+                    <th>{{ __('model.letter.classification_code') }}</th>
                     <th>{{ __('model.letter.agenda_number') }}</th>
                     <th>{{ __('model.letter.from') }}</th>
                     <th>{{ __('model.letter.letter_date') }}</th>

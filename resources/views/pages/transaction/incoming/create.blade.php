@@ -13,22 +13,22 @@
 
                 {{-- Ubah reference_number menjadi classification_code --}}
                 <div class="col-sm-12 col-12 col-md-6 col-lg-4">
-                    <x-input-form name="classification_code" :label="__('model.letter.classification_code')"/>
+                    <x-input-form name="classification_code" :label="__('model.letter.classification_code')" :value="request('classification_code') ?? ''" />
+                </div>
+
+                <div class="col-sm-12 col-12 col-md-6 col-lg-4">
+                    <x-input-form name="agenda_number" :label="__('model.letter.agenda_number')" :value="request('agenda_number') ?? ''"/>
                 </div>
 
                 {{-- 2. Note --}}
                 <div class="col-sm-12 col-12 col-md-6 col-lg-4">
-                    <x-input-form name="note" :label="__('model.letter.note')"/>
+                   <x-input-form name="note" :label="__('model.letter.note')" :value="request('note') ?? ''"/>
                 </div>
 
                 <div class="col-sm-12 col-12 col-md-6 col-lg-4">
                     <x-input-form name="from" :label="__('model.letter.from')"/>
                 </div>
-
-                <div class="col-sm-12 col-12 col-md-6 col-lg-4">
-                    <x-input-form name="agenda_number" :label="__('model.letter.agenda_number')"/>
-                </div>
-
+                
                 <div class="col-sm-12 col-12 col-md-6 col-lg-6">
                     <x-input-form name="letter_date" :label="__('model.letter.letter_date')" type="date"/>
                 </div>

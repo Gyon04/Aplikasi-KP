@@ -42,6 +42,11 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('incoming', \App\Http\Controllers\IncomingLetterController::class);
         Route::resource('outgoing', \App\Http\Controllers\OutgoingLetterController::class);
         Route::resource('{letter}/disposition', \App\Http\Controllers\DispositionController::class)->except(['show']);
+        Route::get('outgoing/surat-dipinjam', [\App\Http\Controllers\OutgoingLetterController::class, 'suratDipinjam'])->name('outgoing.surat_dipinjam');
+
+        // Route untuk pengembalian surat
+        Route::post('outgoing/kembalikan', [\App\Http\Controllers\OutgoingLetterController::class, 'kembalikanSurat'])->name('outgoing.kembalikan');
+
     });
 
     Route::prefix('agenda')->as('agenda.')->group(function () {
@@ -64,5 +69,4 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('classification', \App\Http\Controllers\ClassificationController::class)->except(['show', 'create', 'edit']);
         Route::resource('status', \App\Http\Controllers\LetterStatusController::class)->except(['show', 'create', 'edit']);
     });
-
 });

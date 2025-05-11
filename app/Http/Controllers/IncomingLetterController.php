@@ -37,16 +37,19 @@ class IncomingLetterController extends Controller
      * @return View
      */
     public function agenda(Request $request): View
-    {
-        return view('pages.transaction.incoming.agenda', [
-            'data' => Letter::incoming()->agenda($request->since, $request->until, $request->filter)->render($request->search),
-            'search' => $request->search,
-            'since' => $request->since,
-            'until' => $request->until,
-            'filter' => $request->filter,
-            'query' => $request->getQueryString(),
-        ]);
-    }
+{
+    $jenisHak = $request->jenis_hak ?? null; // ← 🆕 Tambahan baris ini
+
+    return view('pages.transaction.incoming.agenda', [
+        'data' => Letter::incoming()->agenda($request->since, $request->until, $request->filter, $jenisHak)->render($request->search), // ← 🆕 Argument ke-4 ditambahkan
+        'search' => $request->search,
+        'since' => $request->since,
+        'until' => $request->until,
+        'filter' => $request->filter,
+        'jenis_hak' => $jenisHak, // ← 🆕 Tambahan baris ini
+        'query' => $request->getQueryString(),
+    ]);
+}
 
     /**
      * @param Request $request
@@ -58,7 +61,7 @@ class IncomingLetterController extends Controller
         $letter = __('menu.agenda.incoming_letter');
         $title = App::getLocale() == 'id' ? "$agenda $letter" : "$letter $agenda";
         return view('pages.transaction.incoming.print', [
-            'data' => Letter::incoming()->agenda($request->since, $request->until, $request->filter)->get(),
+            'data' => Letter::incoming()->agenda($request->since, $request->until, $request->filter, $request->jenis_hak)->render($request->search),
             'search' => $request->search,
             'since' => $request->since,
             'until' => $request->until,
@@ -76,16 +79,54 @@ class IncomingLetterController extends Controller
      */
     public function daftar(Request $request): View
     {
-        $suratList = [];
+        $jenisHakList = [
+            'HM' => 'HM',
+            'HGB' => 'HGB',
+            'HP' => 'HP',
+            'HPL' => 'HPL',
+            'HGU' => 'HGU',
+            'W' => 'W',
+        ];
 
-        for ($i = 1; $i <= 2000; $i++) {
-            $suratList[] = [
-                'no_hak' => 'NH-' . str_pad($i, 5, '0', STR_PAD_LEFT),
-                'nama_hak' => 'Pemilik ' . $i,
-                'kelurahan' => 'Kelurahan ' . rand(1, 10),
-            ];
+        // Daftar seluruh kelurahan di Pontianak
+        $kelurahanList = [
+            'Benua Melayu Darat', 'Benua Melayu Laut', 'Darat Sekip', 'Darat Bangsa',
+            'Pal Lima', 'Siantan Hulu', 'Siantan Tengah', 'Siantan Hilir',
+            'Sungai Bangkong', 'Sungai Jawi', 'Sungai Jawi Dalam', 'Sungai Raya Dalam',
+            'Sungai Beliung', 'Tanjung Hilir', 'Tanjung Hulu'
+        ];
+
+        $filtered = [];
+
+        if ($request->filled('jenis_hak') && isset($jenisHakList[$request->jenis_hak])) {
+            for ($i = 1; $i <= 200; $i++) {
+                foreach ($kelurahanList as $kelurahan) {
+                    // Buat nomor hak
+                    $noHak = $jenisHakList[$request->jenis_hak] . '-' . str_pad($i, 4, '0', STR_PAD_LEFT);
+    
+                    // Filter berdasarkan kelurahan dan no_hak jika ada
+                    if (
+                        (!$request->filled('kelurahan') || $request->kelurahan === $kelurahan) &&
+                        (!$request->filled('no_hak') || str_contains($noHak, $request->no_hak))
+                    ) {
+                        $filtered[] = [
+                            'jenis_hak' => $jenisHakList[$request->jenis_hak],
+                            'no_hak' => $noHak,
+                            'kelurahan' => $kelurahan,
+                        ];
+                    }
+                }
+            }
         }
-        return view('pages.transaction.incoming.daftar', ['suratList' => $suratList]);
+
+        return view('pages.transaction.incoming.daftar', [
+            'jenisHakList' => $jenisHakList,
+            'kelurahanList' => $kelurahanList,
+            'suratList' => $filtered,
+            'selectedJenisHak' => $request->jenis_hak,
+            'selectedKelurahan' => $request->kelurahan,
+            'selectedNoHak' => $request->no_hak,
+        ]);
     }
 
 

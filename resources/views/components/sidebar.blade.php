@@ -70,11 +70,11 @@
                 </li>
             </ul>
         </li>
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">{{ __('menu.header.other_menu') }}</span>
-        </li>
         
         @if(auth()->user()->role == 'admin')
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">{{ __('menu.header.other_menu') }}</span>
+            </li>
             <!-- User Management -->
             <li class="menu-item {{ \Illuminate\Support\Facades\Route::is('user.*') ? 'active' : '' }}">
                 <a href="{{ route('user.index') }}" class="menu-link">

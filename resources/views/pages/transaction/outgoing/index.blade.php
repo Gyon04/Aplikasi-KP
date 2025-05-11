@@ -6,17 +6,8 @@
     <div class="card mb-4 p-4">
         <h4>Daftar Surat yang Sedang Dipinjam</h4>
 
-        @php
-            $daftarSurat = [
-                ['kode' => 'SRT-001', 'jenis_hak' => 'Hak Milik', 'no_surat' => '001/ADM/2025', 'kelurahan' => 'Kelurahan A'],
-                ['kode' => 'SRT-002', 'jenis_hak' => 'HGU', 'no_surat' => '002/ADM/2025', 'kelurahan' => 'Kelurahan B'],
-                ['kode' => 'SRT-003', 'jenis_hak' => 'HGB', 'no_surat' => '003/ADM/2025', 'kelurahan' => 'Kelurahan C'],
-            ];
-        @endphp
-
-        <form action="#" method="POST">
+        <form action="{{ route('transaction.outgoing.kembalikan') }}" method="POST">
             @csrf
-
             <table class="table table-bordered mt-3">
                 <thead>
                     <tr>
@@ -30,19 +21,21 @@
                     @foreach($daftarSurat as $surat)
                         <tr>
                             <td class="text-center">
-                                <input type="checkbox" name="surat[]" value="{{ $surat['kode'] }}" style="transform: scale(1.5);">
+                                <input type="checkbox" name="surat[]" value="{{ $surat->kode }}" style="transform: scale(1.5);">
                             </td>
-                            <td>{{ $surat['jenis_hak'] }}</td>
-                            <td>{{ $surat['no_surat'] }}</td>
-                            <td>{{ $surat['kelurahan'] }}</td>
+                            <td>{{ $surat->classification_code }}</td>
+                            <td>{{ $surat->agenda_number }}</td>
+                            <td>{{ $surat->note }}</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
 
-            <a href="#" onclick="event.preventDefault(); this.closest('form').submit();" class="btn btn-primary mt-3">
+            <button type="submit" class="btn btn-primary mt-3">
                 Kembalikan Surat yang Dipilih
-            </a>
+            </button>
+
         </form>
+
     </div>
 @endsection

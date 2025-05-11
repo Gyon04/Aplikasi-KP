@@ -20,14 +20,15 @@
                     </div>
                     <div class="col">
                         <div class="mb-3">
-                            <label for="filter" class="form-label">{{ __('menu.agenda.filter_by') }}</label>
-                            <select class="form-select" id="filter" name="filter">
-                                <option
-                                    value="letter_date" @selected(old('filter', $filter) == 'letter_date')>{{ __('model.letter.letter_date') }}</option>
-                                <option
-                                    value="received_date" @selected(old('filter', $filter) == 'received_date')>{{ __('model.letter.received_date') }}</option>
-                                <option
-                                    value="created_at" @selected(old('filter', $filter) == 'created_at')>{{ __('model.general.created_at') }}</option>
+                            <label for="jenis_hak" class="form-label">Jenis Hak</label>
+                            <select class="form-select" id="jenis_hak" name="jenis_hak">
+                                <option value="" @selected(old('jenis_hak', $jenis_hak ?? '') == '')>Semua</option>
+                                <option value="HM" @selected(old('jenis_hak', $jenis_hak ?? '') == 'HM')>HM</option>
+                                <option value="HGB" @selected(old('jenis_hak', $jenis_hak ?? '') == 'HGB')>HGB</option>
+                                <option value="HP" @selected(old('jenis_hak', $jenis_hak ?? '') == 'HP')>HP</option>
+                                <option value="HPL" @selected(old('jenis_hak', $jenis_hak ?? '') == 'HPL')>HPL</option>
+                                <option value="HGU" @selected(old('jenis_hak', $jenis_hak ?? '') == 'HGU')>HGU</option>
+                                <option value="W" @selected(old('jenis_hak', $jenis_hak ?? '') == 'W')>W</option>
                             </select>
                         </div>
                     </div>
@@ -38,12 +39,17 @@
                                 <div class="col">
                                     <button class="btn btn-primary"
                                             type="submit">{{ __('menu.general.filter') }}</button>
-                                    <a
-                                        href="{{ route('agenda.incoming.print') . '?' . $query }}"
-                                        target="_blank"
-                                        class="btn btn-primary">
-                                        {{ __('menu.general.print') }}
-                                    </a>
+                                            <a
+                                                href="{{ route('agenda.incoming.print', [
+                                                    'search' => $search,
+                                                    'since' => $since,
+                                                    'until' => $until,
+                                                    'jenis_hak' => $jenis_hak,
+                                                ]) }}"
+                                                target="_blank"
+                                                class="btn btn-primary">
+                                                {{ __('menu.general.print') }}
+                                            </a>
                                 </div>
                             </div>
                         </div>
@@ -55,7 +61,7 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th>{{ __('model.letter.reference_number') }}</th>
+                    <th>{{ __('model.letter.classification_code') }}</th>
                     <th>{{ __('model.letter.agenda_number') }}</th>
                     <th>{{ __('model.letter.from') }}</th>
                     <th>{{ __('model.letter.letter_date') }}</th>
